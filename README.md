@@ -1,4 +1,4 @@
-OpenGL
+OpenGL Examples
 ======
 
-OpenGL examples
+Some OpenGL examples, test and experiments
