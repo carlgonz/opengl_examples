@@ -184,3 +184,36 @@ class Camara:
         gluLookAt(self.eye.x, self.eye.y, self.eye.z,
                   self.at.x, self.at.y, self.at.z,
                   self.up.x, self.up.y, self.up.z)
+class Eje:
+    def __init__(self, largo):
+        self.largo = largo
+        self.show = True
+
+    def crear(self):
+        pass
+
+    def dibujar(self):
+        if self.show:
+            # almaceno la matriz, para aplicar los cambios solo sobre el Eje
+            glDisable(GL_LIGHTING)
+
+            glPushMatrix()
+            glBegin(GL_LINES)
+
+            # eje Y verde
+            glColor4f(0.0, 1.0, 0.0, 1.0)
+            glVertex4f(0.0, self.largo, 0.0, 1.0)
+            glVertex4f(0.0,   0.0, 0.0, 1.0)
+            # eje x rojo
+            glColor4f(1.0, 0.0, 0.0, 1.0)
+            glVertex4f(0.0, 0.0, 0.0, 1.0)
+            glVertex4f(self.largo, 0.0, 0.0, 1.0)
+            #eje z azul
+            glColor4f(0.0, 0.0, 1.0, 1.0)
+            glVertex4f(0.0, 0.0, 0.0, 1.0)
+            glVertex4f(0.0, 0.0, self.largo, 1.0)
+            glEnd()
+            #importante, recupero la matriz!
+            glPopMatrix()
+
+            glEnable(GL_LIGHTING)

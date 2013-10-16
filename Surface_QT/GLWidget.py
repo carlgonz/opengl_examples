@@ -23,11 +23,14 @@ class GLWidget(QGLWidget):
         self.actors = []
         self.eye, self.at, self.up = 0, 0, 0
         self.camera = None
+        self.axes = None
 
         # To update camera position from absolute values
         self.last_elev_factor = 0
         self.last_azim_factor = 0
         self.last_zoom_factor = 0
+
+        self.l0_pos = []
 
     def initializeGL(self):
         """
@@ -41,20 +44,24 @@ class GLWidget(QGLWidget):
         glDepthFunc(GL_LEQUAL)
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
 
-        glEnable(GL_LIGHTING)
+        self.l0_pos = [0.0, self.width, 10.0*self.height, 1.0]
+
+        #glLightfv(GL_LIGHT0, GL_POSITION, self.l0_pos)
+        glLightfv(GL_LIGHT0, GL_AMBIENT,  [0.4, 0.4, 0.4, 1.0])
+        glLightfv(GL_LIGHT0, GL_SPECULAR, [0.99, 0.99, 0.99, 1.0])
+        glLightfv(GL_LIGHT0, GL_DIFFUSE,  [0.99, 0.99, 0.99, 1.0])
+
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, [0.4, 0.4, 0.4, 1])
         glEnable(GL_LIGHT0)
-        glLightfv(GL_LIGHT0, GL_POSITION, [0.0, self.width, 10.0*self.height, 1.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT,  [0.7, 0.7, 0.7, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-        glLightfv(GL_LIGHT0, GL_DIFFUSE,  [0.5, 0.5, 0.5, 1.0])
+        glEnable(GL_LIGHTING)
 
         self.eye = Vector(300, 0, 0)  # Posicion de la camara (Tripode)
         self.at = Vector(0.0, 0.0, 0.0)   # Hacia donde apunta (Objetivo)
         self.up = Vector(0.0, 0.0, 1.0)   # Giro de la camra (Enderezar)
 
         self.actors.append(Surface("surface_test.csv"))
+        self.axes = Eje(200)
         self.camera = Camara(self.eye, self.at, self.up)
-
 
     def resizeGL(self, width, height):
         """
@@ -76,12 +83,15 @@ class GLWidget(QGLWidget):
         Drawing routine
         """
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # Actualizar pantalla
-        #glClearDepth(1.0)
+        glClearDepth(1.0)
 
         self.camera.lookAt()
+        glLightfv(GL_LIGHT0, GL_POSITION, self.l0_pos)
 
         for actor in self.actors:
             actor.dibujar()
+
+        self.axes.dibujar()
 
     def zoom(self, zoom_factor):
         """
@@ -115,6 +125,9 @@ class GLWidget(QGLWidget):
         self.updateGL()
 
     def wire(self, on_wire):
+        """
+        Toggle display mode to wireframe or surface
+        """
         if on_wire:
             glPolygonMode(GL_FRONT, GL_LINE)
             glPolygonMode(GL_BACK, GL_LINE)
@@ -122,4 +135,26 @@ class GLWidget(QGLWidget):
             glPolygonMode(GL_FRONT, GL_FILL)
             glPolygonMode(GL_BACK, GL_FILL)
 
+        self.updateGL()
+
+    def show_axes(self, show):
+        """
+        Toggle axes display
+        """
+        self.axes.show = show
+        self.updateGL()
+
+    def set_projection(self, perspective_on):
+        """
+        Toggle projection mode to orthogonal or perspective
+        """
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+
+        if perspective_on:
+            gluPerspective(90, float(6*self.width)/float(6*self.height), 0.001*self.lenght, 6*self.lenght)
+        else:
+            glOrtho(-1*self.width, 1*self.width, -1*self.height, 1*self.height, -1*self.lenght, 1*self.lenght)
+
+        glMatrixMode(GL_MODELVIEW)
         self.updateGL()

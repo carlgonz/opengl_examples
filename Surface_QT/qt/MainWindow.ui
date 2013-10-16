@@ -11,15 +11,15 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>OpenGL</string>
+   <string>OpenGL example</string>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="2">
-     <widget class="QGroupBox" name="groupBox">
+    <item row="2" column="2">
+     <widget class="QGroupBox" name="model_group">
       <property name="title">
        <string>Model</string>
       </property>
@@ -28,6 +28,35 @@
         <widget class="QCheckBox" name="wireframe_check">
          <property name="text">
           <string>Wireframe</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="axes_check">
+         <property name="text">
+          <string>Show axes</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QGroupBox" name="projection_group">
+      <property name="title">
+       <string>Projection</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QCheckBox" name="perspective_check">
+         <property name="text">
+          <string>Perspective</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -124,14 +153,7 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="1" rowspan="3">
-     <layout class="QVBoxLayout" name="main_layout">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetDefaultConstraint</enum>
-      </property>
-     </layout>
-    </item>
-    <item row="2" column="2">
+    <item row="4" column="2">
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -143,6 +165,13 @@
        </size>
       </property>
      </spacer>
+    </item>
+    <item row="0" column="1" rowspan="5">
+     <layout class="QVBoxLayout" name="main_layout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -166,7 +195,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSalir">
    <property name="text">
-    <string>Salir</string>
+    <string>Exit</string>
    </property>
   </action>
  </widget>
